@@ -1,0 +1,14 @@
+sources:
+  "2026.0.2":
+    openvino:
+      url: "https://github.com/openvinotoolkit/openvino/archive/refs/tags/2026.0.2.tar.gz"
+      sha256: "99058999e39db9ac982d4aa828269100ef945a98f568468ca7ad7f35e0e1631a"
+    onednn_cpu:
+      url: "https://github.com/openvinotoolkit/oneDNN/archive/c6b79c1207bd5f20b9395536dab1d71a47cfcb1d.tar.gz"
+      sha256: "c6825a7aad5bc83686da759aeb89cf979bd820ba4795b55241fde0d6b093f4d6"
+    mlas:
+      url: "https://github.com/openvinotoolkit/mlas/archive/d1bc25ec4660cddd87804fcf03b2411b5dfb2e94.tar.gz"
+      sha256: "0a44fbfd4b13e8609d66ddac4b11a27c90c1074cde5244c91ad197901666004c"
+
+patches:
+  "2026.0.2": []
