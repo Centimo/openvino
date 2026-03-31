@@ -38,6 +38,7 @@ class OpenvinoConan(ConanFile):
     default_options = {
         "shared": False,
         "fPIC": True,
+        "hwloc/*:shared": True,
         "enable_cpu": True,
         "enable_auto": True,
         "enable_hetero": True,
