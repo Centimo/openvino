@@ -170,6 +170,7 @@ class OpenvinoConan(ConanFile):
         openvino_runtime.set_property("cmake_target_name", "openvino::runtime")
         openvino_runtime.requires = ["onetbb::libtbb", "pugixml::pugixml", "nlohmann_json::nlohmann_json"]
         openvino_runtime.libs = [f"openvino{lib_suffix}"]
+        openvino_runtime.includedirs = ["include"]
         if self._target_x86_64:
             openvino_runtime.requires.append("xbyak::xbyak")
         if self.settings.os in ["Linux", "Android", "FreeBSD", "SunOS", "AIX"]:
@@ -199,6 +200,7 @@ class OpenvinoConan(ConanFile):
                     f"openvino_onnx_frontend{lib_suffix}",
                     f"openvino_onnx_common{lib_suffix}",
                 ])
+                openvino_runtime.requires.append("ONNX")
             if self.options.enable_tf_frontend:
                 openvino_runtime.libs.append(f"openvino_tensorflow_frontend{lib_suffix}")
             if self.options.enable_tf_lite_frontend:
@@ -233,8 +235,7 @@ class OpenvinoConan(ConanFile):
         if self.options.enable_onnx_frontend:
             openvino_onnx = self.cpp_info.components["ONNX"]
             openvino_onnx.set_property("cmake_target_name", "openvino::frontend::onnx")
-            openvino_onnx.libs = [f"openvino_onnx_frontend{lib_suffix}"]
-            openvino_onnx.requires = ["Runtime"]
+            openvino_onnx.libs = ["onnx_proto", "onnx", "protobuf-lite"]
 
         if self.options.enable_tf_frontend:
             openvino_tensorflow = self.cpp_info.components["TensorFlow"]
