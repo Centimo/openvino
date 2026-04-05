@@ -36,10 +36,10 @@
 	ignore = dirty
 [submodule "thirdparty/onnx"]
 	path = thirdparty/onnx/onnx
-	url = https://github.com/onnx/onnx.git
+	url = git@github.com:Centimo/onnx.git
 [submodule "thirdparty/protobuf"]
 	path = thirdparty/protobuf/protobuf
-	url = https://github.com/protocolbuffers/protobuf.git
+	url = git@github.com:Centimo/protobuf.git
 [submodule "src/bindings/python/thirdparty/pybind11"]
 	path = src/bindings/python/thirdparty/pybind11
 	url = https://github.com/pybind/pybind11.git
