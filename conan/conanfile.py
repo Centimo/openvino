@@ -4,7 +4,7 @@ from conan import ConanFile
 from conan.errors import ConanInvalidConfiguration
 from conan.tools.build import check_min_cppstd
 from conan.tools.cmake import CMake, CMakeDeps, CMakeToolchain, cmake_layout
-from conan.tools.files import apply_conandata_patches, copy, export_conandata_patches, rmdir
+from conan.tools.files import apply_conandata_patches, copy, export_conandata_patches, get, rmdir
 
 required_conan_version = ">=2.1"
 
@@ -105,6 +105,17 @@ class OpenvinoConan(ConanFile):
             self.output.info("Sources found in source_folder (from export_sources), skipping download")
         else:
             self.output.error(f"Sources not found in {self.source_folder}")
+
+        sources = self.conan_data["sources"][self.version]
+
+        onednn_dir = os.path.join(self.source_folder, "src", "plugins", "intel_cpu", "thirdparty", "onednn")
+        if not os.path.exists(onednn_dir) or not os.listdir(onednn_dir):
+            get(self, **sources["onednn_cpu"], destination=onednn_dir, strip_root=True)
+
+        mlas_dir = os.path.join(self.source_folder, "src", "plugins", "intel_cpu", "thirdparty", "mlas")
+        if not os.path.exists(mlas_dir) or not os.listdir(mlas_dir):
+            get(self, **sources["mlas"], destination=mlas_dir, strip_root=True)
+
         apply_conandata_patches(self)
 
 
