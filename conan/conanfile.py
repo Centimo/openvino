@@ -49,6 +49,7 @@ class OpenvinoConan(ConanFile):
         "enable_tf_lite_frontend": False,
         "enable_paddle_frontend": False,
         "enable_pytorch_frontend": False,
+        "protobuf/*:lite": True,
     }
 
     @property
@@ -80,10 +81,16 @@ class OpenvinoConan(ConanFile):
             self.requires("xbyak/6.73")
         if self.options.enable_tf_lite_frontend:
             self.requires("flatbuffers/23.5.26")
+        if self.options.enable_onnx_frontend or self.options.enable_paddle_frontend or self.options.enable_tf_frontend:
+            self.requires("protobuf/3.21.12")
+        if self.options.enable_onnx_frontend:
+            self.requires("onnx/1.18.0")
 
     def build_requirements(self):
         if self.options.enable_tf_lite_frontend:
             self.tool_requires("flatbuffers/<host_version>")
+        if self.options.enable_onnx_frontend or self.options.enable_paddle_frontend or self.options.enable_tf_frontend:
+            self.tool_requires("protobuf/<host_version>")
         self.tool_requires("cmake/3.28.3", override=True)
 
     def validate_build(self):
@@ -124,11 +131,15 @@ class OpenvinoConan(ConanFile):
         toolchain.cache_variables["ENABLE_OV_PADDLE_FRONTEND"] = self.options.enable_paddle_frontend
         toolchain.cache_variables["ENABLE_OV_PYTORCH_FRONTEND"] = self.options.enable_pytorch_frontend
         toolchain.cache_variables["ENABLE_OV_JAX_FRONTEND"] = False
-        # System dependencies — use bundled onnx and protobuf to avoid version conflicts
+        # System dependencies
         toolchain.cache_variables["ENABLE_SYSTEM_TBB"] = True
         toolchain.cache_variables["ENABLE_TBBBIND_2_5"] = False
         toolchain.cache_variables["ENABLE_SYSTEM_PUGIXML"] = True
-        toolchain.cache_variables["ENABLE_SYSTEM_PROTOBUF"] = False
+        toolchain.cache_variables["ENABLE_SYSTEM_PROTOBUF"] = bool(
+            self.options.enable_onnx_frontend
+            or self.options.enable_paddle_frontend
+            or self.options.enable_tf_frontend
+        )
         toolchain.cache_variables["ENABLE_SYSTEM_OPENCL"] = False
         if self.options.enable_tf_lite_frontend:
             toolchain.cache_variables["ENABLE_SYSTEM_FLATBUFFERS"] = True
@@ -235,7 +246,7 @@ class OpenvinoConan(ConanFile):
         if self.options.enable_onnx_frontend:
             openvino_onnx = self.cpp_info.components["ONNX"]
             openvino_onnx.set_property("cmake_target_name", "openvino::frontend::onnx")
-            openvino_onnx.libs = ["onnx_proto", "onnx", "protobuf-lite"]
+            openvino_onnx.requires = ["onnx::onnx_proto", "onnx::libonnx"]
 
         if self.options.enable_tf_frontend:
             openvino_tensorflow = self.cpp_info.components["TensorFlow"]
