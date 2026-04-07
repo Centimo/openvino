@@ -93,6 +93,16 @@ class OpenvinoConan(ConanFile):
             self.tool_requires("protobuf/<host_version>")
         self.tool_requires("cmake/3.28.3", override=True)
 
+    def package_id(self):
+        _requires = [
+            "onetbb", "pugixml", "nlohmann_json",
+            # conditional:
+            "xbyak", "flatbuffers", "protobuf", "onnx",
+        ]
+        for name in _requires:
+            if name in self.info.requires:
+                self.info.requires[name].full_package_mode()
+
     def validate_build(self):
         check_min_cppstd(self, "17")
         if self.settings.compiler == "clang" and self.settings.compiler.libcxx == "libc++":
