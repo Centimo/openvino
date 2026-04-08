@@ -81,7 +81,7 @@ class OpenvinoConan(ConanFile):
             self.requires("xbyak/6.73")
         if self.options.enable_tf_lite_frontend:
             self.requires("flatbuffers/23.5.26")
-        if self.options.enable_onnx_frontend or self.options.enable_paddle_frontend or self.options.enable_tf_frontend:
+        if (self.options.enable_tf_frontend or self.options.enable_paddle_frontend) and not self.options.enable_onnx_frontend:
             self.requires("protobuf/3.21.12")
         if self.options.enable_onnx_frontend:
             self.requires("onnx/1.18.0")
@@ -274,6 +274,8 @@ class OpenvinoConan(ConanFile):
             openvino_tensorflow.set_property("cmake_target_name", "openvino::frontend::tensorflow")
             openvino_tensorflow.libs = [f"openvino_tensorflow_frontend{lib_suffix}"]
             openvino_tensorflow.requires = ["Runtime"]
+            if not self.options.enable_onnx_frontend:
+                openvino_tensorflow.requires.append("protobuf::libprotobuf")
 
         if self.options.enable_pytorch_frontend:
             openvino_pytorch = self.cpp_info.components["PyTorch"]
