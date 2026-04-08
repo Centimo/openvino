@@ -536,10 +536,10 @@ if(ENABLE_OV_ONNX_FRONTEND)
     if(ONNX_FOUND)
         # conan and vcpkg create imported targets 'onnx' and 'onnx_proto'
         # newer versions of ONNX in vcpkg has ONNX:: prefix, let's create aliases
-        if(TARGET ONNX::onnx)
+        if(TARGET ONNX::onnx AND NOT TARGET onnx)
             add_library(onnx ALIAS ONNX::onnx)
         endif()
-        if(TARGET ONNX::onnx_proto)
+        if(TARGET ONNX::onnx_proto AND NOT TARGET onnx_proto)
             add_library(onnx_proto ALIAS ONNX::onnx_proto)
         endif()
     else()
