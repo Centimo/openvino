@@ -49,7 +49,7 @@ class OpenvinoConan(ConanFile):
         "enable_tf_lite_frontend": False,
         "enable_paddle_frontend": False,
         "enable_pytorch_frontend": False,
-        "protobuf/*:lite": True,
+        "protobuf/*:lite": False,
     }
 
     @property
